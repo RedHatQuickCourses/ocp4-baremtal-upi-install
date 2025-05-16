@@ -1,5 +1,5 @@
-name: REPLACEREPONAME
-title: FIXME Course Title
+name: ocp4-baremtal-upi-install
+title: "Red Hat OpenShift Container Platform 4: Baremetal UPI Installation"
 version: 1
 nav:
 - modules/ROOT/nav.adoc

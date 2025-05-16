@@ -1,6 +1,6 @@
 site:
-  title: FIXME Course Title
-  start_page: REPLACEREPONAME::index.adoc
+  title: "Red Hat OpenShift Container Platform 4: Baremetal UPI Installation"
+  start_page: ocp4-baremtal-upi-install::index.adoc
 
 content:
   sources:
