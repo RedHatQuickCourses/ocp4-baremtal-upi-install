@@ -1,6 +1,11 @@
 = Lab (2 of 2)
 
-* Create multiple copies of this section as needed.
-* Remove any unnecessary sections or chapter pages.
-* Customize the section as appropriate.
-* Ensure that each page contains a manageable amount of content.
+== Baremetal UPI Installation
+
+. Create cluster installation directory under `lab-user` home directory.
+
+. Run installer to create manifests.
+
+. Run installer to create ignition configs.
+
+. Copy all ign files to public html directory.
