@@ -114,21 +114,192 @@
 </aside>
 <article class="doc">
 <h1 class="page">Lab (1 of 2)</h1>
-<div class="ulist">
-<ul>
+<div class="sect1">
+<h2 id="_lab_prerequisites"><a class="anchor" href="#_lab_prerequisites"></a>Lab prerequisites</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>Create multiple copies of this section as needed.</p>
+<p>Use the ssh command given the NovelloShell output to login to the <code>provision</code> and <code>lb</code> virtual machines.</p>
+<div class="listingblock">
+<div class="title">Sample Output</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-texinfo hljs" data-lang="texinfo">laptop@user:~ $ ssh -i ~/.ssh/pntae_training_key cloud-user@10.0.108.202
+...
+...
+[cloud-user@provision ~]$
+
+You can ssh to `lb` virtual machine from the `provision` virtual machine.
+
+[cloud-user@provision ~]$ ssh lb
+...
+...
+[cloud-user@lb ~]$</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p>Remove any unnecessary sections or chapter pages.</p>
+<p>Ensure the <code>provision</code> and <code>lb</code> virtual machines are unregistered and unsubscribed.</p>
+<div class="listingblock execute">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">sudo subscription-manager unregister; sudo subscription-manager remove --all; sudo subscription-manager clean</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Sample Output</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-texinfo hljs" data-lang="texinfo">[cloud-user@provision ~]$ sudo subscription-manager unregister; sudo subscription-manager remove --all; sudo subscription-manager clean
+This system is currently not registered.
+0 subscriptions removed from this system.
+All local data removed</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p>Customize the section as appropriate.</p>
+<p>Now, register and subscribe the <code>provision</code> and `lb`virtual machines with your customer portal (access.redhat.com) credentials.</p>
+<div class="listingblock execute">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">sudo subscription-manager register</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Sample Output</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-texinfo hljs" data-lang="texinfo">Registering to: subscription.rhsm.redhat.com:443/subscription
+Username:
+Password:
+The system has been registered with ID: bc91d274-84b4-4175-a4df-xxyyzz
+The registered system name is: provision.example.com
+
+Registering to: subscription.rhsm.redhat.com:443/subscription
+Username:
+Password:
+The system has been registered with ID: bc91d274-84b4-4175-a4df-xxyyzz
+The registered system name is: lb.example.com</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p>Ensure that each page contains a manageable amount of content.</p>
+<p>Additional lab information:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>The connection is already modified by executing following commands:</p>
+<div class="listingblock">
+<div class="title">Sample Output</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-texinfo hljs" data-lang="texinfo">$ sudo nmcli connection modify "System eth1" connection.zone internal
+$ sudo nmcli connection modify "System eth0" connection.zone external</code></pre>
+</div>
+</div>
 </li>
-</ul>
+<li>
+<p>You can verify the same by running following command:</p>
+<div class="listingblock">
+<div class="title">Sample Output</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-texinfo hljs" data-lang="texinfo">$ sudo firewall-cmd --list-all --zone=internal
+$ sudo firewall-cmd --list-all --zone=external</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>All required configuration files are in <code>/tmp</code> directory of <code>provision</code> and <code>lb</code> virtual machines.</p>
+</li>
+<li>
+<p>The RHCOS live image <code>rhcos-418.94.202501221327-0-live.x86_64.iso</code> is already downloaded and attached to all nodes (bootstarap, master and worker) as <code>rhcos-418.94.202501221327-0-live.x86_64-pntae</code>.</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_load_balancer_virtual_machine_setup"><a class="anchor" href="#_load_balancer_virtual_machine_setup"></a>Load Balancer Virtual Machine Setup</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Make sure PSI&#8217;s DNS entries are removed.
+You will find this information in reference material.</p>
+</li>
+<li>
+<p>Make sure required packages are installed on <code>lb</code> machine:</p>
+<div class="listingblock">
+<div class="title">Sample Output</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-texinfo hljs" data-lang="texinfo">jq
+ipmitool
+firewalld
+tmux
+podman
+vim
+wget
+telnet
+curl
+haproxy</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>You need to configure the firewall rules as per the RHOCP 4.18 requirements.</p>
+</li>
+<li>
+<p>Reference configuration files for HA-proxy server are placed in <code>lb</code> virtual machine&#8217;s <code>/tmp</code> directory.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_provision_virtual_machine_setup"><a class="anchor" href="#_provision_virtual_machine_setup"></a>Provision Virtual Machine Setup</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Make sure PSI&#8217;s DNS entries are removed.
+You will find this information in reference material.</p>
+</li>
+<li>
+<p>Make sure required packages are installed on <code>provision</code> machine:</p>
+<div class="listingblock">
+<div class="title">Sample Output</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-texinfo hljs" data-lang="texinfo">jq
+ipmitool
+dhcp-server
+bind
+bind-utils
+firewalld
+httpd
+httpd-tools
+tmux
+podman
+telnet</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create <code>lab-user</code> on <code>provision</code> machine.
+Make sure <code>lab-user</code> has sudo privileges.</p>
+</li>
+<li>
+<p>Reference configuration files for DNS and DHCP server are placed in <code>provision</code> machine&#8217;s <code>/tmp</code> directory.
+Configure the <code>provision</code> machine as DNS and DHCP server.</p>
+</li>
+<li>
+<p>You need to configure the firewall rules as per the RHOCP 4.18 requirements.</p>
+</li>
+<li>
+<p>For oc client and openshift install binary, use this the URL - <a href="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/4.18.11/openshift-client-linux.tar.gz" class="bare">https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/4.18.11/openshift-client-linux.tar.gz</a> and <a href="https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/4.18.11/openshift-install-linux.tar.gz" class="bare">https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/4.18.11/openshift-install-linux.tar.gz</a></p>
+</li>
+<li>
+<p>Other configuration files such as <code>install.conf</code> and additional custom command files is also placed under <code>provision</code> machine&#8217;s <code>/tmp</code> directory.</p>
+</li>
+<li>
+<p>Make sure <code>core</code> user is able to ssh nodes (worker, master and bootstrap) using <code>lab-user</code> SSH keys.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
 </div>
 <nav class="pagination">
   <span class="prev"><a href="index.html">UPI Baremetal Install</a></span>
