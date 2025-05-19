@@ -1,27 +1,24 @@
-= An Example Quick Course
+= Red Hat OpenShift Container Platform 4: Baremetal UPI Installation
 :navtitle: Home
+
+[IMPORTANT]
+The lab runs on the one of the Red Hat internal infrastructures called PSI.
 
 == Introduction
 
-Course Title: Course title FIXME
+Course Title: Red Hat OpenShift Container Platform 4 - Baremetal UPI Installation
 
-Description:
-Course description FIXME
+Description: This hands-on lab training provides you with hands on lab to install Red Hat OpenShift Container Platform 4 environment using User-provisioned infrastructre (UPI) method on baremetal.
 
-Duration: FIXME hours
+Duration: 1 hour
 
 == Objectives
 
-On completing this course, you should be able to:
-
-* Observable, measurable objective...
-* Observable, measurable objective...
-* Observable, measurable objective...
+On completing this course, you should be able to install Red Hat OpenShift Container Platform 4 using User-provisioned infrastructre (UPI) on baremetal.
 
 == Prerequisites
 
 This course assumes that you have the following prior experience:
 
-* Course or experience...
-* Course or experience...
-* Course or experience...
+* A Red Hat Certified System Administrator (RHCSA) or have equivalent experience administrating Red Hat Enterprise Linux 8 or 9.
+* A Red Hat Certified Specialist in OpenShift Administration on version 4 or have equivalent experience.

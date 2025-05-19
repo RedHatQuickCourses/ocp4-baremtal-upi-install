@@ -1,3 +1,8 @@
 = Lab Environment
 
-FIXME: Instructions for accessing the lab environment on any other platform, for this hands-on based training.
+[IMPORTANT]
+This lab runs on the one of the Red Hat internal infrastructures called PSI.
+This lab is accessible to Red Hat Employees only.
+
+Successful completion of this course includes completing hands-on lab activities hosted in a cloud-based lab environment.
+Use the instructions from enroll page of this course in LMS under reference material to launch and access that lab environment.

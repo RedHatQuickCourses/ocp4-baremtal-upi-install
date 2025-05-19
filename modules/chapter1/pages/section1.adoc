@@ -1,4 +1,4 @@
-= Section 1
+= Lab (1 of 2)
 
 * Create multiple copies of this section as needed.
 * Remove any unnecessary sections or chapter pages.

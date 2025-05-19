@@ -1,10 +1,12 @@
-# About this Training
+# Red Hat OpenShift Container Platform 4: Baremetal UPI Installation
 
-**Click here: [![Contribute](https://www.eclipse.org/che/contribute.svg)](https://devspaces.apps.tools-na100.dev.ole.redhat.com/#https://github.com/RedHatQuickCourses/REPLACEREPONAME) to start the development using devspace.**
-
-FIXME: Add short description about your training here.
+This hands-on lab training provides you with hands on lab to install Red Hat OpenShift Container Platform 4 environment using User-provisioned infrastructre (UPI) method on baremetal.
 
 # Objectives
 
-FIXME: Add here the list of objectives being covered in this training.
+Install Red Hat OpenShift Container Platform 4 using User-provisioned infrastructre (UPI) on baremetal.
 
+# Prerequsites
+
+* This training assumes that you are a Red Hat Certified System Administrator (RHCSA) or have equivalent experience administrating Red Hat Enterprise Linux 7 or 8.
+* You are a Red Hat Certified Specialist in OpenShift Administration on version 4 or have equivalent experience.
