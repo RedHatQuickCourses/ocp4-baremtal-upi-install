@@ -120,7 +120,7 @@
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Create cluster installation directory under <code>lab-user</code> home directory.</p>
+<p>Create cluster installation directory as <code>clusterconfig</code> under <code>lab-user</code> home directory on <code>provision</code> machine.</p>
 </li>
 <li>
 <p>Run installer to create manifests.</p>
@@ -130,6 +130,212 @@
 </li>
 <li>
 <p>Copy all ign files to public html directory.</p>
+</li>
+<li>
+<p>Rescue the nodes with uploaded image.
+For this change the boot sequence by selecting the <code>toggle</code> option as shown in screenshot below.
+Select the node you want to toggle:</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/toggle.png" alt="toggle">
+</div>
+</div>
+</li>
+<li>
+<p>Once you have toggled the lab, type <code>console</code> option and type the name of the node you want get console access of as shown in screenshot below:</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/rescue.png" alt="rescue">
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+To boot the VM using HDD again, you will need to toggle the boot sequence again using the same <code>toggle</code> option.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Information on <code>cmd</code> script:</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Use the httpd server from provision virtual machine to host the <code>cmd</code> script.
+You will need to mention the ignition-hash in the script.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Sample Output</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-texinfo hljs" data-lang="texinfo">[cloud-user@provision ~]$ cat /tmp/cmd.j2
+sudo nmcli con mod "Wired connection 1" ipv4.dns "192.168.3.254, 8.8.8.8"
+
+sudo nmcli con mod "Wired connection 1" ipv4.ignore-auto-dns yes
+
+sudo systemctl restart NetworkManager
+
+sudo sleep 10
+
+sudo cat /etc/resolv.conf
+
+curl -v http://quay.io/v2
+
+sudo coreos-installer install --ignition-url=http://192.168.3.254/~lab-user/bootstrap.ign --ignition-hash=sha512-{{bootstrap_hash.stdout}} /dev/vdb --copy-network
+
+sudo coreos-installer install --ignition-url=http://192.168.3.254/~lab-user/master.ign --ignition-hash=sha512-{{master_hash.stdout}} /dev/vdb --copy-network
+
+sudo coreos-installer install --ignition-url=http://192.168.3.254/~lab-user/worker.ign --ignition-hash=sha512-{{worker_hash.stdout}} /dev/vdb --copy-network</code></pre>
+</div>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>You will need to modify DNS setting on each node as it will automatically take the DNS server of underlying infrastructure(PSI).</p>
+</li>
+<li>
+<p>All network connections of nodes are named with <code>Wired connection 1</code>.</p>
+</li>
+<li>
+<p>You will notice that modifying these wired connections to connect to our DNS servers.</p>
+</li>
+<li>
+<p>Make sure you are able to connect to <code>quay.io</code>.</p>
+</li>
+<li>
+<p>To make this network setting persistent after reboot and successful installation of RHCOS on the nodes, you need to use <code>--copy-network</code> option in <code>coreos-installer</code> command.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Take the console of the each node, download and run the <code>cmd</code> script:</p>
+<div class="listingblock">
+<div class="title">Sample Output</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-texinfo hljs" data-lang="texinfo">$ sh cmd</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Openstack console doesn&#8217;t have clipboard.
+You can save your time of typing the command in console by modifying and downloading the CMD script using curl.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+For some unidentified reason, nodes are booting with PSI DNS servers.
+You will need to again update <code>/etc/resolv.conf</code> file.
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Update DNS server (<code>192.168.3.254</code> and <code>8.8.8.8</code>) entries in <code>/etc/resolv.conf</code> file.
+Ensure after rebooting nodes (bootstrap, masters and workers), correct DNS servers are reflected.</p>
+<div class="listingblock">
+<div class="title">Sample Output</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-texinfo hljs" data-lang="texinfo">// ssh from provision to nodes
+
+$ sudo sed -i "/\[main\]/a dns=none" /etc/NetworkManager/NetworkManager.conf
+
+$ sudo cat /etc/NetworkManager/NetworkManager.conf | grep -i main -A2
+
+$ sudo systemctl restart NetworkManager
+
+$ sudo vi /etc/resolv.conf
+nameserver 192.168.3.254
+nameserver 8.8.8.8
+
+$ sudo reboot</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>After successful installation of rhcos on each node (verify from console output), unrescue the nodes using <code>toggle</code> option.</p>
+</li>
+<li>
+<p>Take the console of each node and verify it is booted with rhcos (you should see the login prompt), in case if it is taking time or noticing internal server error then try to click on <code>Send CtrlAltDel</code> button to reboot the server.</p>
+<div class="imageblock">
+<div class="content">
+<img src="_images/rhcos_boot.png" alt="rhcos boot">
+</div>
+</div>
+</li>
+<li>
+<p>Run the <code>openshift-install</code> command to start the bootstrap process.</p>
+<div class="listingblock">
+<div class="title">Sample Output</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-texinfo hljs" data-lang="texinfo">[lab-user@provision ~]$ openshift-install --dir clusterconfig wait-for bootstrap-complete --log-level=debug</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Update haproxy settings on load balancer (<code>lb</code>) after bootstrap process is completed.
+Remove the <code>bootstrap</code> machine entry from <code>/etc/haproxy/haproxy.cfg</code> file and restart the <code>haproxy</code> service.</p>
+</li>
+<li>
+<p>On <code>provision</code> virtual machine, export the <code>kubeconfig</code> and approve all <code>csr</code> certificates.</p>
+<div class="listingblock">
+<div class="title">Sample Output</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-texinfo hljs" data-lang="texinfo">[lab-user@provision ~]$ export KUBECONFIG=clusterconfig/auth/kubeconfig
+[lab-user@provision ~]$ oc get csr -o go-template='{{range .items}}{{if not .status}}{{.metadata.name}}{{"\n"}}{{end}}{{end}}' | xargs oc adm certificate approve</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Ensure all nodes are in ready state and all cluster operators are available.</p>
+</li>
+<li>
+<p>Now, complete the installation by running the <code>openshift-install</code> command.</p>
+<div class="listingblock">
+<div class="title">Sample Output</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-texinfo hljs" data-lang="texinfo">[lab-user@provision ~]$ openshift-install --dir clusterconfig/ wait-for install-complete</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>After the installation completes, you can confirm that the cluster version has updated to the new version.</p>
+<div class="listingblock">
+<div class="title">Sample Output</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-texinfo hljs" data-lang="texinfo">[lab-user@provision ~]$ oc get clusterversion
+NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
+version   4.18.11   True        False         2m31s   Cluster version is 4.18.11</code></pre>
+</div>
+</div>
 </li>
 </ol>
 </div>
