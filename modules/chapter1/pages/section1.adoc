@@ -138,6 +138,8 @@ Make sure `lab-user` has sudo privileges.
 . Reference configuration files for DNS and DHCP server are placed in `provision` machine's `/tmp` directory.
 Configure the `provision` machine as DNS and DHCP server.
 
+. Configure httpd server on `provision` virtual machine to host the ignition configs.
+
 . You need to configure the firewall rules as per the RHOCP 4.18 requirements.
 
 . For oc client and openshift install binary, use this the URL - https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/4.18.11/openshift-client-linux.tar.gz and https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/4.18.11/openshift-install-linux.tar.gz
