@@ -3,6 +3,7 @@
 
 [IMPORTANT]
 The lab runs on the one of the Red Hat internal infrastructures called PSI.
+This lab is accessible to Red Hat Employees only.
 
 == Introduction
 
